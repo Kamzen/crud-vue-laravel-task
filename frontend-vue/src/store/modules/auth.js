@@ -8,14 +8,18 @@ import axiosInstance from "@/axiosInstance";
 const state = {
     userInfo : {},
     errors : {},
-    isLoggedIn : false
+    isLoggedIn : false,
+    registerErrors : {},
+    registerSuccess : null
 
 };
 
 const mutations = {
     setUserInfo : (state, payload) => state.userInfo = { ...payload },
     setErrors : (state, payload) => state.errors = { ...payload },
-    setIsLoggedIn : (state, payload) => state.isLoggedIn = payload 
+    setIsLoggedIn : (state, payload) => state.isLoggedIn = payload,
+    setRegisterErrors : (state, payload) => state.registerErrors = payload, 
+    setRegisterSuccess : (state, payload) => state.registerSuccess = payload
 };
 
 // won't be using getters also, will map the state for now
@@ -59,6 +63,42 @@ const actions = {
             ? context.commit('setErrors', e.response.data)
             : context.commit('setErrors', { invalid: "Network error for now" });
         }
+      },
+
+      async register({commit}, form){
+
+        commit('setRegisterErrors', {});
+        commit('setRegisterSuccess', null);
+
+        try{
+          const resp = await axios({
+            url: `http://localhost:8000/api/local/auth/register`,
+            method: "POST",
+            data: form,
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+            },
+            withCredentials: true,
+          });
+  
+          console.log(resp)
+
+          commit('setRegisterSuccess', true)
+
+          setTimeout(() => {
+            router.push({ name : 'login' })
+          }, 3000)
+
+        }catch(e){
+          console.log(e)
+
+          e.response.status === 422
+            ? commit('setRegisterErrors', e.response.data)
+            : commit('setRegisterErrors', { invalid: "Network error for now" });
+
+        }
+
       },
 
       async logout(){

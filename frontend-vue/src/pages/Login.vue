@@ -1,7 +1,7 @@
 <template>
   <div class="card login-form-card">
     <div class="card-body">
-      <h5 class="card-title form-title text-center">Login {{ isLoggedIn }}</h5>
+      <h5 class="card-title form-title text-center">Login</h5>
       <form>
         <div
           class="alert alert-danger"

@@ -35,7 +35,7 @@ Route::prefix(
     // group you  auth routes into auth prefix
     Route::prefix('/auth')->group(function (){
         Route::post('/login', 'AuthController@login');
-        Route::post('/register', function (){});
+        Route::post('/register', 'AuthController@register');
     });
 
     Route::middleware('auth:sanctum')->group(function (){

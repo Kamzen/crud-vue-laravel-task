@@ -42,6 +42,24 @@ class ProductSeeder extends Seeder
                 'slug' => 'royal-canin-mini-adult-dry-dog-food',
                 'created_at' => \Carbon\Carbon::now(),
                 'updated_at' => \Carbon\Carbon::now()
+            ],
+            [
+                'product_name' => 'Royal Canin Mini Exigent Adult Dog Food',
+                'slug' => 'royal-canin-mini-exigent-adult-dry-dog-food',
+                'created_at' => \Carbon\Carbon::now(),
+                'updated_at' => \Carbon\Carbon::now()
+            ],
+            [
+                'product_name' => 'Royal Canin Mini Puppy Food',
+                'slug' => 'royal-canin-mini-exigent-adult-dry-dog-food',
+                'created_at' => \Carbon\Carbon::now(),
+                'updated_at' => \Carbon\Carbon::now()
+            ],
+            [
+                'product_name' => 'Royal Canin Mini Puppy Food',
+                'slug' => 'royal-canin-mini-junior-puppy-dry-dog-food',
+                'created_at' => \Carbon\Carbon::now(),
+                'updated_at' => \Carbon\Carbon::now()
             ]
         ]);
     }

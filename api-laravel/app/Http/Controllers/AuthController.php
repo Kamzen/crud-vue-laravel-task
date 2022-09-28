@@ -7,6 +7,8 @@ use Symfony\Component\HttpFoundation\Response;
 use \Illuminate\Http\JsonResponse;
 
 
+use App\User;
+
 class AuthController extends Controller
 {
     //
@@ -15,7 +17,7 @@ class AuthController extends Controller
         $userCredentials = $request->only('email', 'password');
 
         $rules = [
-            'email' => ['required', 'email'],
+            'email' => ['required'],
             'password' => ['required']
         ];
 
@@ -52,6 +54,33 @@ class AuthController extends Controller
     }
 
     public function register(Request $request){
+
+        $rules = [
+            'username' => 'required|unique:users,username',
+            'email' => 'required|email|unique:users,email',
+            'firstname' => 'required|max:255',
+            'lastname' => 'required|max:255',
+            'password' => 'required|min:8'
+
+        ];
+        $validate = Validator::make($request->all(), $rules);
+
+        if($validate->fails()){
+
+            return response()->json([
+                'error' => true,
+                'validates' => $validate->errors(),
+
+            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+
+        }
+
+        User::create($request->all());
+
+        return response()->json([
+            'error' => false,
+            'message' => 'User created successfully'
+        ]);
 
     }
 

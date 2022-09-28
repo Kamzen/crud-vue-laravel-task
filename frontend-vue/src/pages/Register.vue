@@ -3,24 +3,42 @@
     <div class="card-body">
       <h5 class="card-title form-title text-center">Register</h5>
 
+      <div
+        class="alert alert-success"
+        role="alert"
+        v-if="registerSuccess && registerSuccess !== null"
+      >
+        Account registered successfully
+      </div>
+
       <form>
         <div
           class="alert alert-danger"
           role="alert"
-          v-if="errors?.hasOwnProperty('invalid')"
+          v-if="registerErrors?.hasOwnProperty('invalid')"
         >
-          {{ errors["invalid"] }}
+          {{ registerErrors["invalid"] }}
         </div>
         <div class="mb-3">
-          <label for="firsname" class="form-label">Firstname</label>
+          <label for="firstname" class="form-label">Firstname</label>
           <input
             type="text"
             class="form-control"
             id="firsname"
             placeholder="Firstname"
-            v-model="form.firsname"
+            v-model="form.firstname"
             autocomplete="true"
           />
+
+          <p
+            class="text text-danger"
+            v-if="
+              registerErrors.hasOwnProperty('validates') &&
+              registerErrors?.validates?.hasOwnProperty('firstname')
+            "
+          >
+            {{ registerErrors.validates.firstname[0] }}&#42;
+          </p>
         </div>
         <div class="mb-3">
           <label for="lastname" class="form-label">Lastname</label>
@@ -32,6 +50,16 @@
             v-model="form.lastname"
             autocomplete="true"
           />
+
+          <p
+            class="text text-danger"
+            v-if="
+              registerErrors.hasOwnProperty('validates') &&
+              registerErrors?.validates?.hasOwnProperty('lastname')
+            "
+          >
+            {{ registerErrors.validates.lastname[0] }}&#42;
+          </p>
         </div>
         <div class="mb-3">
           <label for="email" class="form-label">Email address</label>
@@ -46,11 +74,11 @@
           <p
             class="text text-danger"
             v-if="
-              errors.hasOwnProperty('validates') &&
-              errors?.validates.hasOwnProperty('email')
+              registerErrors?.hasOwnProperty('validates') &&
+              registerErrors?.validates.hasOwnProperty('email')
             "
           >
-            {{ errors.validates.email[0] }}&#42;
+            {{ registerErrors?.validates.email[0] }}&#42;
           </p>
         </div>
         <div class="mb-3">
@@ -63,7 +91,18 @@
             v-model="form.username"
             autocomplete="true"
           />
+
+          <p
+            class="text text-danger"
+            v-if="
+              registerErrors.hasOwnProperty('validates') &&
+              registerErrors?.validates?.hasOwnProperty('username')
+            "
+          >
+            {{ registerErrors.validates.username[0] }}&#42;
+          </p>
         </div>
+
         <div class="mb-3">
           <label for="password" class="form-label">Password</label>
           <input
@@ -77,21 +116,23 @@
           <p
             class="text text-danger"
             v-if="
-              errors.hasOwnProperty('validates') &&
-              errors?.validates.hasOwnProperty('password')
+              registerErrors.hasOwnProperty('validates') &&
+              registerErrors?.validates?.hasOwnProperty('password')
             "
           >
-            {{ errors.validates.password[0] }}&#42;
+            {{ registerErrors.validates.password[0] }}&#42;
           </p>
         </div>
 
-        <button type="button" class="btn btn-light" @click="login">
+        <button type="button" class="btn btn-light" @click="signUp">
           Register
         </button>
 
         <div class="text-center">
           <i>Already have account?</i>
-          <router-link to="/login" class="btn btn-link btn-reg">Login</router-link>
+          <router-link to="/login" class="btn btn-link btn-reg"
+            >Login</router-link
+          >
         </div>
       </form>
     </div>
@@ -99,7 +140,9 @@
 </template>
 
 <script>
+// eslint-disable-next-line no-unused-vars
 import axios from "axios";
+import { mapActions, mapState } from "vuex";
 
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
@@ -107,38 +150,22 @@ export default {
   data() {
     return {
       form: {
+        username: "",
         email: "",
+        firstname: "",
+        lastname: "",
         password: "",
       },
-
-      errors: {},
-      inValidCredentials: 0,
     };
   },
+  computed: {
+    ...mapState("auth", ["registerErrors", "registerSuccess"]),
+  },
   methods: {
-    async login(e) {
-      e.preventDefault();
-
-      try {
-        const resp = await axios({
-          url: `http://localhost:8000/api/local/auth/login`,
-          method: "POST",
-          data: this.form,
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-          withCredentials: true,
-        });
-
-        // set token to local storage
-
-        localStorage.setItem("access-token", resp.data.token);
-      } catch (e) {
-        e.response.status === 422
-          ? (this.errors = { ...e.response.data })
-          : (this.errors = { invalid: "Network error for now" });
-      }
+    ...mapActions("auth", ["register"]),
+    signUp() {
+      this.register(this.form);
+      // console.log(this.registerErrors);
     },
   },
 };
