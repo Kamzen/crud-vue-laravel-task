@@ -2,6 +2,8 @@
 
 #### On forms there is no validations on front and back so when testing them please don't leave any input empty as they required
 
+### Added register endpoint you now register account
+
 ### Project setup
 
 
