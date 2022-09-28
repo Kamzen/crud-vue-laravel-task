@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
 use \Illuminate\Http\JsonResponse;
@@ -74,8 +75,10 @@ class AuthController extends Controller
             ], Response::HTTP_UNPROCESSABLE_ENTITY);
 
         }
-
-        User::create($request->all());
+        User::create(
+            $request->except('password') +
+            ['password' => Hash::make($request->input('password'))
+            ]);
 
         return response()->json([
             'error' => false,
