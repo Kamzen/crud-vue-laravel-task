@@ -134,7 +134,9 @@ class CategoryController extends Controller
 
         $categoryId = $request->route()->parameter('category_id');
 
-        $category = CategoryModel::find($categoryId)->delete();
+        $category = CategoryModel::find($categoryId)->products()->detach();
+
+        CategoryModel::find($categoryId)->delete();
 
         return response()->json([
             'error' => false,
